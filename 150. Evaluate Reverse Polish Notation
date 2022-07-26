@@ -1,0 +1,23 @@
+// Time: O(n)
+// Space: O(n)
+
+class Solution {
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> stack = new Stack<>();
+        for (String s: tokens) {
+            if (!"+-*/".contains(s))
+                stack.push(Integer.parseInt(s));
+            else {
+                int num2 = stack.pop();
+                int num1 = stack.pop();
+                switch (s) {
+                    case "+": stack.push(num1 + num2); break;
+                    case "-": stack.push(num1 - num2); break;
+                    case "*": stack.push(num1 * num2); break;
+                    case "/": stack.push(num1 / num2); break;
+                }
+            }
+        }
+        return stack.pop();
+    }
+}
