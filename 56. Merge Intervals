@@ -1,0 +1,26 @@
+
+// Time: O(nlogn)
+// Space: O(logn)[sort in place]; 
+//        O(n)[store a copy of intervals and sort]
+
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        List<int[]> ans = new ArrayList<>();
+        int n = intervals.length;
+        Arrays.sort(intervals, (a,b)->(a[0] - b[0]));
+        
+        int[] insert = intervals[0];
+        ans.add(insert);
+        
+        for (int[] interval: intervals) {
+            if (interval[0] <= insert[1]) {  
+                insert[1] = Math.max(insert[1], interval[1]);
+            } else {
+                insert = interval;
+                ans.add(insert);
+            }
+        }
+        
+        return ans.toArray(new int[ans.size()][2]);
+    }
+}
