@@ -1,0 +1,41 @@
+// Time: O(n)
+// Space: O(1)
+class Solution {
+    public int maxArea(int[] height) {
+        int n = height.length;
+        int start = 0;
+        int end = n-1;
+        
+        int maxA = 0;
+        
+        while (start < end) {
+            maxA = Math.max(maxA, (end - start) * Math.min(height[start], height[end]));
+            if (height[start] < height[end]) start++;
+            else end--;
+        }
+        return maxA;
+    }
+}
+
+// Ans-2
+class Solution {
+    public int maxArea(int[] height) {
+        int n = height.length;
+        int start = 0;
+        int end = n-1;
+        
+        int minH = 0;
+        int maxA = 0;
+        
+        while (start < end) {
+            int newMinH = Math.min(height[start], height[end]) ;
+            if (newMinH > minH) {
+                maxA = Math.max(maxA, (end - start) * newMinH);
+            }
+            if (height[start] < height[end]) start++;
+            else end--;
+
+        }
+        return maxA;
+    }
+}
