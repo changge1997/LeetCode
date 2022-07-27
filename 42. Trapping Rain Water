@@ -1,0 +1,75 @@
+
+// Stack
+// Time: O(n)
+// Space: O(n)
+
+/*
+        __     __rightUpper2
+leftUpper |  _|
+          |_| rightUpper1
+           ^
+      lowerHeight
+*/      
+      
+class Solution {
+    public int trap(int[] height) {
+        int n = height.length;
+        Stack<Integer> stack = new Stack<>();
+        int sum = 0;
+        
+        int i = 0;
+        while (i < n) {
+        
+            // 保证加进去的都等于或比前面的height小， 存height的index
+            if (stack.isEmpty() || height[i] <= height[stack.peek()]) stack.push(i++);
+            // 当要加的数比前一个数大时， 就以前一个数为底（把这个数去掉），另一条边就是再前个数，计算能存的水
+            else {
+                int bottom = stack.pop();
+                if (stack.isEmpty()) continue;
+                
+                int j = stack.peek();
+                sum += (i - j - 1) * (Math.min(height[i], height[j]) - height[bottom]);
+            }      
+        }
+        return sum;
+    }
+}
+
+// Two pointers
+// Time: O(n)
+// Space: O(1)
+class Solution {
+    public int trap(int[] height) {
+        int n = height.length;
+        int leftMax = height[0];
+        int rightMax = height[n-1];
+        int left = 1;
+        int right = n-2;
+        int sum = 0;
+        
+        // leftMax(0) and rightMax(n-1) are two sides for the container;
+        // For each side, if the next height is less than the max, there might be water inside the hole;
+        // if next is larger, we need to update the max;
+        // However, We only consider the shorter side for saving water since water will only leak from this side
+        
+        while (left <= right) {
+            if (leftMax < rightMax) {
+                if (height[left] < leftMax) {
+                    sum += leftMax - height[left];
+                } else {
+                    leftMax = height[left];
+                }
+                left++;
+            } else {
+                if (height[right] < rightMax) {
+                    sum += rightMax - height[right];
+                } else {
+                    rightMax = height[right];
+                }
+                right--;
+            }
+        }
+        
+        return sum;
+    }
+}
