@@ -1,0 +1,60 @@
+// Time: O(n)
+// Space: O(n)
+
+// Without Stack
+// For each i: Save index of the first number in both right/left directions that less than heights[i]
+//             area = heights[i]*(right[i] - left[i] -1);
+
+class Solution {
+    public int largestRectangleArea(int[] heights) {
+        int n = heights.length;
+        int[] lessFromLeft = new int[n];
+        int[] lessFromRight = new int[n];
+        
+        lessFromLeft[0] = -1;
+        for (int i = 1; i < n; i++) {
+            int l = i - 1;
+            while (l != -1 && heights[l] >= heights[i]) l = lessFromLeft[l];
+            lessFromLeft[i] = l;
+        }
+        
+        lessFromRight[n-1] = n;
+        for (int i = n - 2; i >= 0; i--) {
+            int r = i + 1;
+            while (r != n && heights[r] >= heights[i]) r = lessFromRight[r];
+            lessFromRight[i] = r;
+        }
+        
+        int area = 0;
+        for (int i = 0; i < n; i++) {
+            area = Math.max(area, heights[i]*(lessFromRight[i] - lessFromLeft[i] - 1));
+        }
+        return area;
+    }
+}
+
+// With Stack
+// Save index in the stack
+// For each i in the stack(treat i as the center): 
+// the number before i is the first number in the left that less that heights[i];
+// if we come up with a smaller number to its right, so we can calculte the area based on this i.
+
+class Solution {
+    public int largestRectangleArea(int[] heights) {
+        int n = heights.length;
+        Stack<Integer> stack = new Stack<>();
+        int area = 0;
+        
+        for (int i = 0; i <= n; i++) {
+            int h = i == n? 0: heights[i];
+            while (!stack.isEmpty() && h < heights[stack.peek()]) {
+                int curr = stack.pop();
+                int prev = stack.isEmpty()? -1: stack.peek();
+                area = Math.max(area, heights[curr] * (i - prev - 1));
+            }
+            stack.push(i);
+        }
+        
+        return area;
+    }
+}
