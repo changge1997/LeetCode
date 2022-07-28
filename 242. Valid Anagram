@@ -1,0 +1,25 @@
+// Time: O(n)
+// Space: O(1)
+
+// If string contains other unicodes, we can use hashmap
+
+class Solution {
+    public boolean isAnagram(String s, String t) {
+        int sl = s.length();
+        if (sl != t.length()) return false;
+        
+        // String only contains lowercase letters
+        int[] st = new int[26];
+        for (int i = 0; i < sl; i++) {
+            char sch = s.charAt(i);
+            char tch = t.charAt(i);
+            st[sch - 'a']++;
+            st[tch - 'a']--;
+        }
+        
+        for (int freq: st) {
+            if (freq != 0) return false;
+        }
+        return true;
+    }
+}
