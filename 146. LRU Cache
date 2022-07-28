@@ -1,0 +1,81 @@
+// Hashmap put and get operation time complexity is O(1).
+// HashMap+ Double-linked list
+// Move the fresh node (insert or updated) to head;
+// Remove the tail node when reach to capacity
+
+class LRUCache {
+    
+    class Node {
+        int key;
+        int val;
+        Node prev;
+        Node next;
+        
+        public Node(int key, int val) {
+            this.key = key;
+            this.val = val;
+        }
+        
+    }
+    
+    private Map<Integer, Node> cache;
+    private int size;
+    private int capacity;
+    private Node head;
+    private Node tail;
+    
+    public LRUCache(int capacity) {
+        this.cache = new HashMap<>();
+        this.size = 0;
+        this.capacity = capacity;
+        
+        this.head = new Node(-1, -1);
+        this.tail = new Node(-1, -1);
+        head.next = tail;      
+        tail.prev = head;
+
+    }
+    
+    public int get(int key) {
+        Node node = cache.get(key);
+        if (node == null) return -1;
+        else {
+            deleteNode(node);
+            insertHead(node);
+            return node.val;
+        }
+        
+    }
+    
+    public void put(int key, int value) {
+        Node node = cache.get(key);
+        if (node == null) {
+            node = new Node(key, value);
+            cache.put(key, node);
+            
+            if (size == capacity) {
+                cache.remove(tail.prev.key);
+                deleteNode(tail.prev);
+            } else size++;
+            
+        } else {
+            node.val = value;
+            deleteNode(node);
+        }
+        insertHead(node);
+    }
+    
+     public void deleteNode(Node node) {
+         node.prev.next = node.next;
+         node.next.prev = node.prev;
+     }
+    
+     public void insertHead(Node node) {
+         node.next = head.next;
+         head.next.prev = node;
+         head.next = node;
+         node.prev = head;
+     }
+
+    
+}
