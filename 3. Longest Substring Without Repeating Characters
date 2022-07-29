@@ -1,0 +1,58 @@
+// Time: O(n)
+// Space: O(min(m,n))
+// n: the size of the string 
+// m: the size of the charset/alphabet 
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int n = s.length();
+        Map<Character, Integer> map = new HashMap<>();
+        
+        int len = 0;
+        int left = 0;
+        for (int i = 0; i < n; i++) {
+            char c = s.charAt(i);
+            left = Math.max(left, map.getOrDefault(c, -1) + 1);
+            len = Math.max(len, i-left+1);  
+            map.put(c, i);
+        }
+        return len;
+    }
+}
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int n = s.length();
+        Map<Character, Integer> map = new HashMap<>();
+        
+        int len = 0;
+        int left = 0;
+        for (int i = 0; i < n; i++) {
+            char c = s.charAt(i);
+            if (map.getOrDefault(c, -1) >= left) {
+                len = Math.max(len, i-left);  
+                left = map.get(c) + 1;
+            }
+            map.put(c, i);
+        }
+        return Math.max(len, n - left);
+    }
+}
+
+// Without HashMap
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int n = s.length();
+        int[] table = new int[128];
+        
+        int len = 0;
+        int left = 0;
+        for (int i = 0; i < n; i++) {
+            char c = s.charAt(i);
+            left = Math.max(left, table[c]);
+            len = Math.max(len, i-left+1);  
+            table[c] = i + 1;
+        }
+        return len;
+    }
+}
