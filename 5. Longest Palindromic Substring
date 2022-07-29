@@ -1,0 +1,29 @@
+// Time: O(n^2)
+// Space: O(1)
+class Solution {
+    public String longestPalindrome(String s) {
+        int n = s.length();
+        if (n < 2) return s;
+        
+        int[] ans = new int[2];        
+        for (int i = 0; i < n - 1; i++) {
+            findSub(s, i, i, n, ans);
+            findSub(s, i, i + 1, n, ans);
+        }
+        
+        return s.substring(ans[0], ans[0] + ans[1]);
+    }
+    
+    public void findSub(String s, int l, int r, int len, int[] ans) {
+        while (l >= 0 && r < len && s.charAt(l) == s.charAt(r)) {
+            l--;
+            r++;
+        }
+        
+        if (ans[1] < r - l - 1) {
+            ans[0] = l + 1;
+            ans[1] = r - l - 1;
+        }
+        
+    }
+}
