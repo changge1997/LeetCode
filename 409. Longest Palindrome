@@ -1,0 +1,41 @@
+// Time: O(n)
+// Space: O(1)
+class Solution {
+    public int longestPalindrome(String s) {
+        int[] count = new int[128];
+        
+        int len = 0;
+        boolean odd = false;
+        for (char c: s.toCharArray()) {
+            count[c]++;
+        }
+        for (int c: count) {
+            if (c == 0) continue;
+            len += (c/2)*2;
+            if (!odd && c%2 == 1) {
+                len++;
+                odd = true;
+            }
+        }
+        return len;
+    }
+}
+
+
+// HashSet
+// Time: O(n)
+// Space: O(n)
+class Solution {
+    public int longestPalindrome(String s) {
+        Set<Character> set = new HashSet<>();
+        
+        int len = 0;
+        for (char c: s.toCharArray()) {
+            if (set.add(c)) continue;
+            set.remove(c);
+            len = len + 2;
+        }
+        
+        return set.isEmpty()? len: len + 1;
+    }
+}
