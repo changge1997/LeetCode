@@ -1,0 +1,37 @@
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        List<Integer> ans = new ArrayList<>();
+        
+        int[] table = new int[256];
+        for (char c: p.toCharArray()) {
+            table[c]++;
+        }
+        
+        int n = s.length();
+        int pLen = p.length();
+        // Count number of chars in one pLen subarray that also in p
+        int match = 0;
+        
+        int start = 0;
+        int end = 0;
+       
+        while (end < n) {
+            // if char at end is in p, number of match++
+            // move to next end char
+            if(table[s.charAt(end++)]-- > 0) match++;
+            
+            // If length of subarray == pLen and match = pLen, we find a index;
+            // If not match, we need to move to next start
+            // If char at start is previously counted as match, we also need to decrease match by 1
+            // Also we need to recover the table
+            if (end - start == pLen) {
+                char c = s.charAt(start);
+                if (match == pLen) ans.add(start);
+                if(table[c] >= 0) match--;
+                table[c]++;
+                start++;
+            }
+        }
+        return ans;
+    }
+}
