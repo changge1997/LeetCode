@@ -1,0 +1,33 @@
+// Time: O(S + T)
+// Space: O(S + T)
+class Solution {
+    public String minWindow(String s, String t) {      
+        int m = s.length();
+        int n = t.length();
+        if (m < n) return "";
+  
+        int ans = 0;
+        int minLen = Integer.MAX_VALUE;
+        
+        int[] table = new int[256];
+        for (char c: t.toCharArray()) {
+            table[c]++;
+        }
+        
+        int start = 0;
+        int end = 0;     
+        int match = 0;
+        while (end < m) {
+            if (table[s.charAt(end++)]-- > 0) match++;
+            while (match == n) {
+                if (end - start < minLen) {
+                    ans = start;
+                    minLen = end - start;
+                }
+                if (table[s.charAt(start++)]++ == 0) match--;    
+            }
+        }
+        if (minLen == Integer.MAX_VALUE) return "";
+        return s.substring(ans, ans + minLen);
+    }
+}
