@@ -1,0 +1,42 @@
+// Time: O(n)
+// Space: O(n)
+
+// ans[2] = {maxDiameter, depth of tree}
+// For each node: depth = 1 + Math.max(depth of left/right)
+//                maxDiameter = Math.max(maxDiameter of left/right) or 
+//                              (depth of left + depth of right)
+
+class Solution {
+    public int diameterOfBinaryTree(TreeNode root) {
+        int[] ans = depthOfNode(root);
+        return ans[0];
+    }
+    
+    public int[] depthOfNode(TreeNode node) {
+        int[] ans = new int[2];
+        if (node == null) return ans;
+        int left[] = depthOfNode(node.left);
+        int right[] = depthOfNode(node.right);
+        ans[1] = 1 + Math.max(left[1], right[1]);
+        ans[0] = Math.max(left[1] + right[1], Math.max(left[0], right[0]));
+        return ans;
+    }
+}
+
+// modify or "mutating" a input of a function (may have "side-effects")
+// has no difference as using a global variable with OO thinking
+class Solution {
+    public int diameterOfBinaryTree(TreeNode root) {
+        int[] ans = new int[1];
+        depthOfNode(root, ans);
+        return ans[0];
+    }
+    
+    public int depthOfNode(TreeNode node, int[] diameter) {
+        if (node == null) return 0;
+        int left = depthOfNode(node.left, diameter);
+        int right = depthOfNode(node.right, diameter);
+        diameter[0] = Math.max(diameter[0], left + right);
+        return 1 + Math.max(left, right);
+    }
+}
