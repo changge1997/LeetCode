@@ -1,0 +1,83 @@
+// Recursion
+// Time: O(n)
+// Space: O(n)
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || root == p || root == q) return root;
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+        if (left != null && right != null) return root;
+        return left == null? right: left;     
+    } 
+}
+
+// Iteration
+// Time: O(n)
+// Space: O(n)
+// Iterate the tree and save each node with its parent node in map (until reach both p and q)
+// Save all the ancestors of p in set
+// Iterate all the ancestors of q from q, if reach to a same one, that is the loweast.
+
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        Stack<TreeNode> stack = new Stack<>();
+        Map<TreeNode, TreeNode> map = new HashMap<>();
+        
+        map.put(root, null);
+        stack.push(root);
+        while (!map.containsKey(p) || !map.containsKey(q)) {
+            TreeNode node = stack.pop();
+            if (node.left != null) {
+                stack.add(node.left);
+                map.put(node.left, node);
+            }
+            if (node.right != null) {
+                stack.add(node.right);
+                map.put(node.right, node);
+            }
+        }
+        
+        Set<TreeNode> set = new HashSet<>();
+        while (p != null) {
+            set.add(p);
+            p = map.get(p);
+        }
+        
+        while (!set.contains(q)) q = map.get(q);
+        return q;
+    }
+}
+
+// Iteration
+//Only one stack
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) return root;
+        TreeNode pre = null;
+        TreeNode ans = root;
+        boolean foundOne = false;
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        TreeNode curr = root;
+        while (!stack.isEmpty()) {
+            if (curr != null) {
+                if (curr == p || curr == q) {
+                    if (foundOne) return ans;
+                    foundOne = true;
+                    ans = curr;
+                }
+                stack.push(curr);
+                curr = curr.left; 
+            } else {
+                TreeNode node = stack.peek();
+                if (node.right == null || pre == node.right) {
+                    pre = stack.pop();;
+                    if (ans == node && foundOne) {        
+                        ans = stack.peek();
+                    } 
+                } else curr = node.right;   
+            } 
+        }
+        return root;  
+    }
+}
