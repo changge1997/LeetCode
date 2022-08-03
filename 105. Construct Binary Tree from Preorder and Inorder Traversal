@@ -1,0 +1,45 @@
+// Recursion
+// Time: O(n)
+// Space: O(H) H is the height of the tree, average logN/ worst N
+class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        return buildTree(preorder, inorder, 0, 0, inorder.length - 1);
+    }
+    
+    public TreeNode buildTree(int[] preorder, int[] inorder, int root, int start, int end) {
+        if (start > end) return null;
+        TreeNode node = new TreeNode(preorder[root]);
+        int mid = start;
+        while (mid <= end && inorder[mid] != preorder[root]) mid++;
+        node.left = buildTree(preorder, inorder, root + 1, start, mid - 1);
+        node.right = buildTree(preorder, inorder, root + mid - start + 1, mid + 1, end);
+        return node;
+    }
+}
+
+// Iteration
+// Iterate preorder, add new node (default left child of peek node)
+// keep poping stack top if it's equal to next inorder value, the next preorder val is just the right child of last poped node.
+class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        int n = preorder.length;
+        TreeNode root = new TreeNode(preorder[0]);
+        TreeNode poped = null;
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        for (int i = 1, j = 0; i < n; i++) {
+            while (j < n && !stack.isEmpty() && stack.peek().val == inorder[j]) {
+                j++;
+                poped = stack.pop();
+            }
+            TreeNode curr = new TreeNode(preorder[i]);
+            
+            if (poped == null) stack.peek().left = curr;
+            else poped.right = curr;
+        
+            stack.push(curr);
+            poped = null;
+        }
+        return root;
+    }
+}
