@@ -1,0 +1,86 @@
+// Time: O(n)
+// Space: O(n)
+
+// BFS with queue
+public class Codec {
+    
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        if (root == null) return "";
+        StringBuilder sb = new StringBuilder();
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            if (node == null){
+                sb.append("null ");   
+            } else {
+                sb.append(node.val+" ");
+                queue.offer(node.left);
+                queue.offer(node.right);
+            }   
+        }
+        return sb.toString();
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        if (data.equals("")) return null;
+        String[] dataStr = data.split(" ");
+        TreeNode root = new TreeNode(Integer.valueOf(dataStr[0]));
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        for (int i = 1; i < dataStr.length; i += 2) {
+            TreeNode node = queue.poll();
+            if (!dataStr[i].equals("null")) {
+                node.left = new TreeNode(Integer.valueOf(dataStr[i]));
+                queue.offer(node.left);
+            }
+            if (!dataStr[i+1].equals("null")) {
+                node.right = new TreeNode(Integer.valueOf(dataStr[i+1]));
+                queue.offer(node.right);
+            }    
+        }
+        return root;
+    }
+}
+
+// DFS recursion (faster)
+public class Codec {
+
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        StringBuilder sb = new StringBuilder();
+        serialize(root, sb);
+        return sb.toString();
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        String[] dataStr = data.split(" ");
+        Queue<String> dataQ = new ArrayDeque<>();
+        int index = 0;
+        while (index < dataStr.length) {
+            dataQ.offer(dataStr[index++]);
+        }
+        return deserialize(dataQ);
+    }
+    
+    public void serialize(TreeNode node, StringBuilder sb) {
+        if (node == null) sb.append("null ");
+        else {
+            sb.append(node.val + " ");
+            serialize(node.left, sb);
+            serialize(node.right, sb);
+        }
+    }
+    
+    public TreeNode deserialize(Queue<String> data) { 
+        String curr = data.poll();
+        if (curr.equals("null")) return null;
+        TreeNode root = new TreeNode(Integer.valueOf(curr));
+        root.left = deserialize(data);
+        root.right = deserialize(data);
+        return root;       
+    }
+}
