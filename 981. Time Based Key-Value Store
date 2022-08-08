@@ -1,0 +1,65 @@
+class TimeMap {
+    
+    class Pair {
+        int timestamp;
+        String value;
+        
+        public Pair(int timestamp, String value) {
+            this.timestamp = timestamp;
+            this.value = value;
+        }
+    }
+    
+    Map<String, List<Pair>> map;
+
+    public TimeMap() {
+        map = new HashMap<>();
+    }
+    
+    public void set(String key, String value, int timestamp) {
+        Pair newPair = new Pair(timestamp, value);
+        if (map.containsKey(key)) map.get(key).add(newPair);
+        else map.put(key, new ArrayList<>(Arrays.asList(newPair)));
+        
+    }
+    
+    public String get(String key, int timestamp) {
+        if (!map.containsKey(key)) return "";
+        List<Pair> list = map.get(key);
+        return binarySearch(list, timestamp);
+    }
+
+    public String binarySearch(List<Pair> list, int timestamp) {
+        int n = list.size();
+        int low = 0;
+        int high = n - 1;
+        
+        while (low < high) {
+            int mid = low + (high - low)/2;
+            Pair midPair = list.get(mid);
+            if (midPair.timestamp <= timestamp) {
+                if (list.get(mid + 1).timestamp > timestamp) return midPair.value;
+                low = mid + 1;
+            } else high = mid;
+        }
+        return list.get(low).timestamp <= timestamp? list.get(low).value: "";
+    }
+}
+
+// Another version of binary search
+    public String binarySearch(List<Pair> list, int timestamp) {
+        int n = list.size();
+        int low = 0;
+        int high = n - 1;
+        
+        while (low + 1 < high) {
+            int mid = low + (high - low)/2;
+            Pair midPair = list.get(mid);
+            if (midPair.timestamp == timestamp) return midPair.value;
+            if (midPair.timestamp > timestamp) high = mid;
+            else low = mid;
+        }
+        if (list.get(high).timestamp <= timestamp) return list.get(high).value;
+        if (list.get(low).timestamp <= timestamp) return list.get(low).value;
+        return "";
+    }
