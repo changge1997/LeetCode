@@ -1,0 +1,76 @@
+
+// Time: O(N + M), N is a number of nodes (vertices) and M is a number of edges.
+// Space: O(N)
+
+// DFS with Array
+class Solution {
+    public Node cloneGraph(Node node) {
+        if (node == null) return null;
+        Node copy = new Node(node.val, new ArrayList<Node>());
+        
+        // Store the copied one
+        Node[] visited = new Node[101];
+        dfs(node, copy, visited);
+        return copy;
+    }
+    
+    public void dfs(Node node, Node copy, Node[] visited) {
+        visited[copy.val] = copy;
+        for (Node neighbor: node.neighbors) {
+            if (visited[neighbor.val] == null) {
+                Node copyNeighbor = new Node(neighbor.val, new ArrayList<Node>());
+                copy.neighbors.add(copyNeighbor);
+                dfs (neighbor, copyNeighbor, visited);
+            } else {
+                copy.neighbors.add(visited[neighbor.val]);
+            }
+        }
+    }
+}
+
+// DFS with HashMap
+class Solution {
+    public Node cloneGraph(Node node) {
+        if (node == null) return null;
+        Map<Node, Node> visited = new HashMap<>();
+        Node copy = new Node(node.val);
+        dfs(node, copy, visited);
+        return copy;
+    }
+    
+    public void dfs(Node node, Node copy, Map<Node, Node> visited) {
+        visited.put(node, copy);
+        for (Node neighbor: node.neighbors) {
+            if (!visited.containsKey(neighbor)) {
+                Node copyOfNeighbor = new Node(neighbor.val);
+                dfs(neighbor, copyOfNeighbor, visited);
+                visited.put(neighbor, copyOfNeighbor);
+            }
+            copy.neighbors.add(visited.get(neighbor));
+        }
+    }
+}
+
+// BFS
+class Solution {
+    public Node cloneGraph(Node node) {
+        if (node == null) return null;
+        Queue<Node> queue = new LinkedList<>();
+        Map<Node, Node> visited = new HashMap<>();
+        Node newNode = new Node(node.val);
+        visited.put(node, newNode);
+        queue.offer(node);
+        
+        while (!queue.isEmpty()) {
+            Node curr = queue.poll();
+            for (Node neighbor: curr.neighbors) {
+                if (!visited.containsKey(neighbor)) {
+                    visited.put(neighbor, new Node(neighbor.val));
+                    queue.offer(neighbor);
+                }
+                visited.get(curr).neighbors.add(visited.get(neighbor));
+            }    
+        }
+        return newNode;
+    }
+}
