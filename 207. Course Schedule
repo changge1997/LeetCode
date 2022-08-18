@@ -1,0 +1,69 @@
+// Time: O(E + V)
+// Space: O(E + V)
+
+// DFS: precourse as the key
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        ArrayList<Integer>[] courses = new ArrayList[numCourses];
+        
+        for (int i = 0; i < numCourses; i++) {
+            courses[i] = new ArrayList<>();
+        }
+        for (int[] pre: prerequisites) {
+            courses[pre[1]].add(pre[0]);
+        }
+        
+        boolean[] visited = new boolean[numCourses];
+        boolean[] oneRound = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (!dfs(i, courses, visited, oneRound)) return false;
+        }
+    
+        return true;
+    }
+    
+    public boolean dfs(int course, ArrayList<Integer>[] courses, boolean[] visited, boolean[] passThisRound) {
+        if (visited[course]) return passThisRound[course];
+        
+        visited[course] = true;
+        
+        for (int pre: courses[course]) {
+            if (!dfs(pre, courses, visited, passThisRound)) return false;
+        }
+        passThisRound[course] = true;
+        return true;
+    }
+}
+
+// BFS: topological sort
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        int[] degree = new int[numCourses];
+        ArrayList<Integer>[] courses = new ArrayList[numCourses];
+        
+        for (int i = 0; i < numCourses; i++) {
+            courses[i] = new ArrayList<Integer>();
+        }
+        
+        for (int[] pre: prerequisites) {
+            degree[pre[0]]++;
+            courses[pre[1]].add(pre[0]);
+        }
+        
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (degree[i] == 0) queue.offer(i);
+        }
+        
+        int count = 0;
+        while (!queue.isEmpty()) {
+            int pre = queue.poll();
+            count++;
+            for (int course: courses[pre]) {
+                degree[course]--;
+                if (degree[course] == 0) queue.offer(course);
+            }
+        }
+        return count == numCourses;
+    }
+}
