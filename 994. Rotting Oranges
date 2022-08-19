@@ -1,0 +1,42 @@
+// Time: O(M*N)
+// Space: O(M*N)
+// BFS
+class Solution {
+    public int orangesRotting(int[][] grid) {
+        int[][] direction = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        int m = grid.length;
+        int n = grid[0].length;
+        int minute = 0;
+        int numOfFruit = m*n;
+        Queue<int[]> queue = new LinkedList<>();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 0) numOfFruit--;
+                if (grid[i][j] == 2) queue.offer(new int[]{i, j});
+            }
+        }
+        if (numOfFruit == 0) return 0;
+        
+        int count = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                int[] curr = queue.poll();
+                count++;
+                int row = curr[0];
+                int col = curr[1];
+                for (int[] dir: direction) {
+                    int r = row + dir[0];
+                    int c = col + dir[1];
+                    if (r < 0 || r >= m || c < 0 || c >= n || grid[r][c] == 2) continue;
+                    if (grid[r][c] == 1){
+                        grid[r][c] = 2;
+                        queue.offer(new int[]{r, c});
+                    }
+                }
+            }
+            minute++;
+        }
+        return count == numOfFruit? minute - 1: -1;
+    }
+}
