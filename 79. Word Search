@@ -1,0 +1,48 @@
+
+// Time Complexity: O(N⋅3^L) where N is the number of cells in the board and 
+//                  L is the length of the word to be matched.
+
+// For the backtracking function, initially we could have at most 4 directions to explore, 
+// but further the choices are reduced into 3 (since we won't go back to where we come from). 
+// As a result, the execution trace after the first step could be visualized as a 3-ary tree, 
+// each of the branches represent a potential exploration in the corresponding direction. Therefore, 
+// in the worst case, the total number of invocation would be the number of nodes in a full 3-nary tree, which is about 3^L.
+// We iterate through the board for backtracking, i.e. there could be N times invocation for the backtracking function in the worst case.
+
+// Space Complexity: O(L) where L is the length of the word to be matched.
+
+class Solution {
+    int[][] directions={{1,0},{-1,0},{0,1},{0,-1}};
+    public boolean exist(char[][] board, String word) {
+        int m = board.length;
+        int n = board[0].length;
+        char[] wordChar = word.toCharArray();
+        
+        for (int i = 0; i < m; i++) 
+            for (int j = 0; j < n; j++) {
+                if (wordChar[0] != board[i][j]) continue;
+                if (backtracking(board, i, j, wordChar, 0))
+                    return true;
+            }
+        return false;
+    }
+    
+    public boolean backtracking(char[][] board, int r, int c, char[] wordChar, int index) {
+        if (index == wordChar.length) return true;
+        
+        if (r < 0 || r >= board.length || c < 0 || c >= board[0].length || 
+            board[r][c] != wordChar[index]) 
+            return false;
+        
+        board[r][c] = '#';
+        for (int[] dir: directions) {
+            int row = r + dir[0];
+            int col = c + dir[1];
+            if (backtracking(board, row, col, wordChar, index + 1))
+                return true;
+        }
+        
+        board[r][c] = wordChar[index];
+        return false;
+    }
+}
