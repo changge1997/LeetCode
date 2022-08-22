@@ -1,0 +1,46 @@
+
+// Let |V| be the number of nodes in the graph, then the number of edges would be |V| - 1.
+// Time Complexity: O(|V|) [O(|V| + |V| - 1)]
+// Space Complexity: O(|V|)
+
+class Solution {
+    public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+        List<Integer> ans = new ArrayList<>();
+        if (n == 1) {
+            ans.add(0);
+            return ans;
+        }
+        
+        ArrayList<Integer>[] trees = new ArrayList[n];
+        int[] inDegree = new int[n];
+        for (int i = 0; i < n; i++) {
+            trees[i] = new ArrayList<>();
+        }
+        for (int[] e: edges) {
+            trees[e[0]].add(e[1]);
+            trees[e[1]].add(e[0]);
+        }
+        
+        Queue<Integer> queue = new LinkedList<Integer>();
+        for (int i = 0; i < n; i++) {
+            inDegree[i] = trees[i].size();
+            if (inDegree[i] == 1) queue.offer(i);
+        }
+        
+        int num = n;
+        while (num > 2) {
+            int size = queue.size();
+            num -= size;
+            for (int i = 0; i < size; i++) {
+                int curr = queue.poll();
+                for (int next: trees[curr]) {
+                    inDegree[next]--;
+                    if (inDegree[next] == 1) queue.offer(next); 
+                }
+            }
+        }
+        
+        ans.addAll(queue);
+        return ans;
+    }
+}
