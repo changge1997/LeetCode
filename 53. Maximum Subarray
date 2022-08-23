@@ -1,0 +1,51 @@
+// Time: O(n)
+// Space: O(1)
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int n = nums.length;
+        int preSum = nums[0];
+        int maxSum = nums[0];
+        
+        for (int i = 1; i < n; i++) {
+            preSum = Math.max(preSum + nums[i], nums[i]);
+            maxSum = Math.max(preSum, maxSum);
+        }
+        return maxSum;
+    }
+}
+
+// divide and conquer 
+// Time: O(nlogn)
+// Space: O(logn)
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int n = nums.length;
+        return findMax(nums, 0, n - 1);
+    }
+    
+    public int findMax(int[] nums, int start, int end) {
+        if (start > end) return Integer.MIN_VALUE;
+        
+        int mid = start + (end - start)/2;
+        int leftMax = 0;
+        int rightMax = 0;
+        
+        int curr = 0;
+        for (int i = mid - 1; i >= start; i--) {
+            curr += nums[i];
+            leftMax = Math.max(leftMax, curr);
+        }
+        
+        curr = 0;
+        for (int i = mid + 1; i <= end; i++) {
+            curr += nums[i];
+            rightMax = Math.max(rightMax, curr);
+        }
+        
+        int midSub = leftMax + rightMax + nums[mid];
+        int leftSub = findMax(nums, start, mid - 1);
+        int rightSub = findMax(nums, mid + 1, end);
+        
+        return Math.max(midSub, Math.max(leftSub, rightSub));
+    }
+}
