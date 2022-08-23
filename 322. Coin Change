@@ -1,0 +1,42 @@
+// Time: O(amount * N)
+// Space: O(amount)
+
+// Recursion
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        numOfCoins(coins, dp, amount);
+        return dp[amount];
+    }
+    
+    public int numOfCoins(int[] coins, int[] dp, int amount) {
+        if (amount < 0) return -1;
+        if (amount == 0) return 0;
+        if (dp[amount] != 0) return dp[amount];
+        
+        int minNum = Integer.MAX_VALUE;
+        for (int val: coins) {
+            int temp = numOfCoins(coins, dp, amount - val);
+            if (temp == -1) continue;
+            minNum = Math.min(minNum, temp + 1);
+        }
+        dp[amount] = minNum == Integer.MAX_VALUE? -1: minNum;
+        return dp[amount];
+    }
+}
+
+// Iteration
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        for (int sum = 1; sum <= amount; sum++) {
+            int minNum = Integer.MAX_VALUE;
+            for (int val: coins) {
+                if (sum - val >= 0 && dp[sum - val] != -1)
+                    minNum = Math.min(minNum, dp[sum - val] + 1);
+            }
+            dp[sum] = minNum == Integer.MAX_VALUE? -1: minNum;
+        } 
+        return dp[amount];
+    }
+}
