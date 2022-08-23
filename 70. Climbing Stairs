@@ -1,0 +1,32 @@
+// Time: O(n)
+// Space: O(n)
+class Solution {
+    public int climbStairs(int n) {
+        if (n <= 2) return n;
+        int[] ways = new int[n+1];
+        ways[1] = 1;
+        ways[2] = 2;
+        for (int i = 3; i <= n; i++) {
+            ways[i] = ways[i - 1] + ways[i - 2];
+        }
+        return ways[n];
+    }
+}
+
+// Use constant to replace array:
+// oneStep = ways[i - 1]
+// twoStep = ways[i - 2]
+class Solution {
+    public int climbStairs(int n) {
+        if (n <= 2) return n;
+        int oneStep = 2;
+        int twoStep = 1;
+        int ways = 0;
+        for (int i = 3; i <= n; i++) {
+            ways = oneStep + twoStep;
+            twoStep = oneStep;
+            oneStep = ways;
+        }
+        return ways;
+    }
+}
