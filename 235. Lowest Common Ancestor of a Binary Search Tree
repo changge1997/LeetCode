@@ -1,0 +1,31 @@
+// Recursion
+// Time: O(N)
+// Space: O(H), where H is height (average logN, worst N)
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) return root;
+        int pDiff = root.val - p.val;
+        int qDiff = root.val - q.val;
+        if (pDiff * qDiff <= 0) return root;
+        if (pDiff < 0) return lowestCommonAncestor(root.right, p, q);
+        else return lowestCommonAncestor(root.left, p, q);
+    }
+}
+
+// Iteration
+// Time: O(N)
+// Space: O(1)
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        TreeNode curr = root;
+        
+        while (curr != null) {
+            if (curr.val > p.val && curr.val > q.val) {
+                curr = curr.left;
+            } else if (curr.val < p.val && curr.val < q.val) {
+                curr = curr.right;
+            } else return curr;
+        }
+        return null;
+    }
+}
