@@ -1,0 +1,28 @@
+// Time: O(H+k)
+// Time: O(H)
+class Solution {
+    public int kthSmallest(TreeNode root, int k) {
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode curr = root;
+        
+        while (curr != null || !stack.isEmpty()) {
+            while (curr != null) {
+                stack.push(curr);
+                curr = curr.left;
+            }
+            
+            curr = stack.pop();
+            k--; 
+            if (k == 0) return curr.val;
+            curr = curr.right;
+        }
+        return -1;
+    }
+}
+
+// Follow up
+combine BST with a double linked list(inorder).
+O(H) time for the insert and delete.
+O(k) for the search of kth smallest.
+Time complexity for insert/delete + search of kth smallest: O(H + k), 
+Space complexity : O(N) to keep the linked list.
