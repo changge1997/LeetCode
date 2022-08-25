@@ -1,0 +1,33 @@
+
+// Time Complexity: O(m⋅n), where m is the subSetSum, and n is the number of array elements. 
+// Space Complexity: O(m), As we use an array of size m to store the result of subproblems.
+
+class Solution {
+    public boolean canPartition(int[] nums) {
+        int n = nums.length;
+        int sum = 0;
+        for (int i = 0; i < n; i++) {
+            sum += nums[i];
+        }
+        if (sum % 2 != 0) return false;
+        sum = sum/2;
+        
+        boolean[] dp = new boolean[sum + 1];
+        dp[0] = true;
+        int currSum = 0;
+        for (int num: nums) {
+            currSum += num;
+            int target = Math.min(currSum, sum);
+            for (int j = target; j >= num; j--) {
+                dp[j] = dp[j] || dp[j - num];
+            }
+            if (dp[sum]) return true;
+        }
+        return dp[sum];
+    }
+}
+
+// 2D array DP
+dp[i][j] means whether the specific sum j can be gotten from the first i numbers.
+boolean[][] dp = new boolean[n+1][sum+1];
+dp[0][0] = true;
