@@ -1,0 +1,39 @@
+// PriorityQueue
+// Time: O(NlogK) <max pq, only save k int[]>
+// Space: O(N)
+
+// QuickSort
+// Average Time: O(N)
+class Solution {
+    public int[][] kClosest(int[][] points, int k) {
+        int start = 0;
+        int end = points.length - 1;
+        while (start <= end) {
+            int mid = quickSelect(points, start, end);
+            if (mid == k) break;
+            if (mid < k) start = mid + 1;
+            else end = mid - 1;
+        }
+        
+        int[][] ans = new int[k][2];
+        for (int i = 0; i < k; i++) ans[i] = points[i];
+        return ans;
+    }
+    
+    public int quickSelect(int[][] points, int start, int end) {
+        int[] pivot = points[end];
+        while (start < end) {
+            while (start < end && compare(points[start], pivot) <= 0) start++;
+            points[end] = points[start];
+            while (start < end && compare(points[end], pivot) >= 0) end--;
+            points[start] =  points[end];
+        }
+        points[start] = pivot;
+        return start;
+        
+    }
+    
+    public int compare(int[] a, int[] b) {
+        return a[0]*a[0] + a[1]*a[1] - b[0]*b[0] - b[1]*b[1];
+    }
+}
