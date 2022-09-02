@@ -1,0 +1,56 @@
+class WordDictionary {
+
+    class TrieNode {
+        TrieNode[] children;
+        boolean isEnd;
+      
+        public TrieNode() {
+            children = new TrieNode[26];
+        }
+    }
+    
+    private TrieNode root;
+    public WordDictionary() {
+        root = new TrieNode();
+    }
+    
+    // Time: O(M) M is the length of the new word.
+    // Space: O(M)
+    public void addWord(String word) {
+        TrieNode curr = root;
+        for (int i = 0; i < word.length(); i++) {
+            char c = word.charAt(i);
+            if (curr.children[c-'a'] == null)
+                curr.children[c-'a'] = new TrieNode();
+            curr = curr.children[c-'a'];
+        }
+        curr.isEnd = true;
+    }
+    
+    // M is the length of the new word. N is a number of keys.
+    
+    // Time: O(M) for the "well-defined" words without dots
+    //       O(N * 26^M) for the "undefined" words. 
+    //       That corresponds to the worst-case situation of searching an undefined word (M .) which is one character longer than all inserted keys.
+    
+    // Space: O(M)
+    public boolean search(String word) {
+        return match(word, 0, root);
+    }
+    
+    public boolean match(String word, int idx, TrieNode node) {
+        if (idx == word.length()) return node.isEnd;
+        
+        char c = word.charAt(idx);
+        if (c == '.') {
+            for (int i = 0; i < 26; i++) {
+                if (node.children[i] != null && match(word, idx + 1, node.children[i]))
+                    return true;
+            }    
+        } else
+            return node.children[c-'a'] != null && match(word, idx + 1, node.children[c-'a']);
+        
+        
+        return false;
+    }
+}
