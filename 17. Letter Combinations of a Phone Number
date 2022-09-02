@@ -1,0 +1,51 @@
+// Time: O(N * 4^N) 
+//       Build combination: O(N); 4^N combinations
+// Space: O(N)
+class Solution {
+    private static final String[] KEYS = { "", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+
+    public List<String> letterCombinations(String digits) {
+        List<String> ans = new ArrayList<>();
+        if (digits == null || digits.length() == 0) return ans;
+        
+        backtracking(digits, 0, new StringBuilder(), ans);
+        return ans;
+    }
+    
+    public void backtracking(String digits, int idx, StringBuilder sb, List<String> ans) {
+        if (idx == digits.length()) ans.add(sb.toString());
+        else {
+           
+            String letters = KEYS[digits.charAt(idx) - '0'];
+            for (int i = 0; i < letters.length(); i++) {
+                char c = letters.charAt(i);
+                sb.append(c);
+                backtracking(digits, idx + 1, sb, ans);
+                sb.deleteCharAt(sb.length() - 1);
+            }
+            
+        }
+    }
+}
+
+// Queue
+// Time: O(4^N) 
+// Space: O(4^N)
+class Solution {
+    public List<String> letterCombinations(String digits) {
+        String[] KEYS = { "", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        LinkedList<String> ans = new LinkedList<>();
+        if (digits == null || digits.length() == 0) return ans;
+        
+        ans.add("");
+        for (int i = 0; i < digits.length(); i++) { 
+            String letters = KEYS[digits.charAt(i) - '0'];
+            while (ans.peek().length() == i) {
+                String s = ans.remove();
+                for (char c: letters.toCharArray()) ans.add(s + c);
+            }
+        }
+        
+        return ans;
+    }
+}
