@@ -1,0 +1,69 @@
+// Time: O(MN)
+// Space: O(1)
+class Solution {
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> ans = new ArrayList<>();
+        int m = matrix.length;
+        int n = matrix[0].length;
+        
+        int rowStart = 0;
+        int rowEnd = m - 1;
+        int colStart = 0;
+        int colEnd = n - 1;
+        
+        while (ans.size() < m * n) {        
+            for (int i = colStart; i <= colEnd && ans.size() < m * n; i++) {
+                ans.add(matrix[rowStart][i]);
+            }
+            rowStart++;
+            
+            for (int i = rowStart; i <= rowEnd && ans.size() < m * n; i++) {
+                ans.add(matrix[i][colEnd]);
+            }
+            colEnd--;  
+             
+            for (int i = colEnd; i >= colStart && ans.size() < m * n; i--) {
+                ans.add(matrix[rowEnd][i]);
+            }
+            rowEnd--;
+            
+            for (int i = rowEnd; i >= rowStart && ans.size() < m * n; i--) {
+                ans.add(matrix[i][colStart]);
+            }            
+            colStart++;  
+        }
+        return ans;
+    }
+}
+
+// Flip direction
+// Two movement patterns: right+down and left+up
+class Solution {
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> ans = new ArrayList<>();
+        
+        int m = matrix.length;
+        int n = matrix[0].length;
+        
+        int r = 0;
+        int c = -1;
+        int direction = 1;
+        
+        while (m * n > 0) {        
+            for (int i = 0; i < n; i++) {
+                c += direction;
+                ans.add(matrix[r][c]);
+            }
+            m--;
+            
+            for (int i = 0; i < m; i++) {
+                r += direction;
+                ans.add(matrix[r][c]);
+            }
+            n--;
+            
+            direction *= -1;
+        }
+        return ans;
+    }
+}
