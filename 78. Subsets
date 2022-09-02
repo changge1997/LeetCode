@@ -1,0 +1,22 @@
+
+// Time: O(N * 2^N) 2^N subsets, copy to list: N
+// Space: O(N) for recursion
+class Solution {
+    public List<List<Integer>> subsets(int[] nums) {
+        int n = nums.length;
+        List<List<Integer>> ans = new ArrayList<>();
+        backtracking(nums, 0, ans, new ArrayList<Integer>());
+        return ans;
+    }
+    
+    public void backtracking(int[] nums, int idx, List<List<Integer>> ans, List<Integer> list) {
+        int n = nums.length;
+        ans.add(new ArrayList<>(list));
+        
+        for (int i = idx; i < n; i++) {
+            list.add(nums[i]); 
+            backtracking(nums, i + 1, ans, list);
+            list.remove(list.size() - 1); 
+        }
+    }
+}
