@@ -1,0 +1,8 @@
+
+The essential concepts is you keep a counter for the majority number X.
+If you find a number Y that is not X, the current counter should deduce 1.
+The reason is that if there is 5 X and 4 Y, there would be one (5-4) more X than Y. 
+This could be explained as "4 X being paired out by 4 Y".
+
+169. Majority Element
+229. Majority Element II
